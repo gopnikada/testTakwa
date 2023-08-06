@@ -28,22 +28,18 @@ namespace App1
         public string PLZ { get; set; }
         public string Ort { get; set; }
         public string Street { get; set; }
-        public string IKNumber2 { get; set; }
-        public CsvDataModel(string iKNumber, string name, string pLZ, string ort, string street, string iKNumber2)
+        public string IKNumberRef { get; set; }
+        public CsvDataModel(string iKNumber, string name, string pLZ, string ort, string street, string iKNumberRef)
         {
             IKNumber = iKNumber;
             Name = name;
             PLZ = pLZ;
             Ort = ort;
             Street = street;
-            IKNumber2 = iKNumber2;
+            IKNumberRef = iKNumberRef;
         }
     }
 
-
-    /// <summary>
-    /// An empty window that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class MainWindow : Window
     {
 
@@ -55,17 +51,15 @@ namespace App1
 
         public MainWindow()
         {
-            this.InitializeComponent();
+            InitializeComponent();
             LoadDataFromCsv();
         }
-        private async void LoadDataFromCsv()
+        private void LoadDataFromCsv()
         {
-            // Replace "data.csv" with the path to your CSV file
             var csvFilePath = "C:\\Users\\User\\source\\repos\\App1\\App1\\kostentraeger.csv";
             var lines = File.ReadLines(csvFilePath);
             data = new ObservableCollection<CsvDataModel>();
 
-            // Skip the first line (headers) and parse the remaining lines
             foreach (var line in lines)
             {
                 var values = line.Split(';');
@@ -79,6 +73,7 @@ namespace App1
                      values[17]
                 ));
             }
+            DataGridSetFiltered(data);
         }
         private void OnSearchBoxNumber(object sender, Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
         {
@@ -108,8 +103,6 @@ namespace App1
             dataGrid.ItemsSource = filteredData;
 
         }
-
-
 
     }
 
