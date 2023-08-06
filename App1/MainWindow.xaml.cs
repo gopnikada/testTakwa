@@ -1,3 +1,4 @@
+using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -38,6 +39,8 @@ namespace App1
             IKNumber2 = iKNumber2;
         }
     }
+
+
     /// <summary>
     /// An empty window that can be used on its own or navigated to within a Frame.
     /// </summary>
@@ -45,22 +48,27 @@ namespace App1
     {
 
         private ObservableCollection<CsvDataModel> data;
+
+        public string SearchTextNumber { get; private set; } = string.Empty;
+        public string SearchTextName { get; private set; } = string.Empty;
+        public string SearchTextOrt { get; private set; } = string.Empty;
+
         public MainWindow()
         {
             this.InitializeComponent();
             LoadDataFromCsv();
         }
-         private async void LoadDataFromCsv()
-    {
-        // Replace "data.csv" with the path to your CSV file
-        var csvFilePath = "C:\\Users\\User\\source\\repos\\App1\\App1\\kostentraeger.csv";
-        var lines = File.ReadLines(csvFilePath);
-        data = new ObservableCollection<CsvDataModel>();
-
-        // Skip the first line (headers) and parse the remaining lines
-        foreach (var line in lines)
+        private async void LoadDataFromCsv()
         {
-            var values = line.Split(';');
+            // Replace "data.csv" with the path to your CSV file
+            var csvFilePath = "C:\\Users\\User\\source\\repos\\App1\\App1\\kostentraeger.csv";
+            var lines = File.ReadLines(csvFilePath);
+            data = new ObservableCollection<CsvDataModel>();
+
+            // Skip the first line (headers) and parse the remaining lines
+            foreach (var line in lines)
+            {
+                var values = line.Split(';');
                 data.Add(new CsvDataModel
                 (
                      values[1],
@@ -70,9 +78,39 @@ namespace App1
                     values[9],
                      values[17]
                 ));
+            }
         }
+        private void OnSearchBoxNumber(object sender, Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
+        {
+            SearchTextNumber = searchBoxNumber.Text.Trim();
+            DataGridSetFiltered(data);
+        }
+
+        private void OnSearchBoxName(object sender, Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
+        {
+            SearchTextName = searchBoxName.Text.Trim();
+            DataGridSetFiltered(data);
+        }
+
+        private void OnSearchBoxOrt(object sender, Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
+        {
+            SearchTextOrt = searchBoxOrt.Text.Trim();
+            DataGridSetFiltered(data);
+        }
+
+        private void DataGridSetFiltered(ObservableCollection<CsvDataModel> data)
+        {
+            var filteredData = new ObservableCollection<CsvDataModel>(data.Where(item =>
+               item.IKNumber.Contains(SearchTextNumber) &&
+                item.Name.Contains(SearchTextName) &&
+           item.Ort.Contains(SearchTextOrt)
+           ));
+            dataGrid.ItemsSource = filteredData;
+
+        }
+
+
+
     }
 
-     
-    }
 }

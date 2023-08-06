@@ -9,7 +9,26 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
     mc:Ignorable="d">
 
-    <controls:DataGrid x:Name="myDataGrid" AutoGenerateColumns="True"  
-                           ItemsSource="{x:Bind data}"></controls:DataGrid>
+
+
+
+    <Grid>
+        <StackPanel>
+            <TextBox x:Name="searchBoxNumber" PlaceholderText="Search Id.." KeyUp="OnSearchBoxNumber" />
+            <TextBox x:Name="searchBoxName" PlaceholderText="Search Name.." KeyUp="OnSearchBoxName" />
+            <TextBox x:Name="searchBoxOrt" PlaceholderText="Search City.." KeyUp="OnSearchBoxOrt" />
+            <controls:DataGrid x:Name="dataGrid" AutoGenerateColumns="False">
+                <controls:DataGrid.Columns>
+                    <controls:DataGridTextColumn Header="IK-Nr" Binding="{Binding IKNumber}" />
+                    <controls:DataGridTextColumn Header="Name" Binding="{Binding Name}" />
+                    <controls:DataGridTextColumn Header="PLZ" Binding="{Binding PLZ}" />
+                    <controls:DataGridTextColumn Header="Ort" Binding="{Binding Ort}" />
+                    <controls:DataGridTextColumn Header="Straße/Hausnummer" Binding="{Binding Street}" />
+                    <controls:DataGridTextColumn Header="IK-Nr2" Binding="{Binding IKNumber2}" />
+                </controls:DataGrid.Columns>
+            </controls:DataGrid>
+        </StackPanel>
+    </Grid>
+
 
 </Window>
