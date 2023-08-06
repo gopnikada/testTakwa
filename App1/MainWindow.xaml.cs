@@ -43,7 +43,10 @@ namespace App1
     public sealed partial class MainWindow : Window
     {
 
-        private ObservableCollection<CsvDataModel> data;
+        private ObservableCollection<CsvDataModel> Data;
+        private ObservableCollection<CsvDataModel> EmptyData = new ObservableCollection<CsvDataModel>() {
+            new CsvDataModel("", "", "", "No data to show", "", "") 
+        };
 
         public string SearchTextNumber { get; private set; } = string.Empty;
         public string SearchTextName { get; private set; } = string.Empty;
@@ -58,12 +61,12 @@ namespace App1
         {
             var csvFilePath = "C:\\Users\\User\\source\\repos\\App1\\App1\\kostentraeger.csv";
             var lines = File.ReadLines(csvFilePath);
-            data = new ObservableCollection<CsvDataModel>();
+            Data = new ObservableCollection<CsvDataModel>();
 
             foreach (var line in lines)
             {
                 var values = line.Split(';');
-                data.Add(new CsvDataModel
+                Data.Add(new CsvDataModel
                 (
                      values[1],
                     values[0],
@@ -73,24 +76,24 @@ namespace App1
                      values[17]
                 ));
             }
-            DataGridSetFiltered(data);
+            DataGridSetFiltered(Data);
         }
         private void OnSearchBoxNumber(object sender, Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
         {
             SearchTextNumber = searchBoxNumber.Text.Trim();
-            DataGridSetFiltered(data);
+            DataGridSetFiltered(Data);
         }
 
         private void OnSearchBoxName(object sender, Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
         {
             SearchTextName = searchBoxName.Text.Trim();
-            DataGridSetFiltered(data);
+            DataGridSetFiltered(Data);
         }
 
         private void OnSearchBoxOrt(object sender, Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
         {
             SearchTextOrt = searchBoxOrt.Text.Trim();
-            DataGridSetFiltered(data);
+            DataGridSetFiltered(Data);
         }
 
         private void DataGridSetFiltered(ObservableCollection<CsvDataModel> data)
@@ -100,7 +103,15 @@ namespace App1
                 item.Name.Contains(SearchTextName) &&
            item.Ort.Contains(SearchTextOrt)
            ));
-            dataGrid.ItemsSource = filteredData;
+            if(filteredData.Count > 0)
+            {
+                dataGrid.ItemsSource = filteredData;
+            }
+            else
+            {
+                dataGrid.ItemsSource = EmptyData;
+            }
+            
 
         }
 
